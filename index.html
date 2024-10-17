@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Pacifico', cursive;
+            text-align: center;
+            background-color: #000;
+            color: white;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh; /* Use full height of the viewport */
+            display: flex; /* Flexbox for centering */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            flex-direction: column; /* Stack elements vertically */
+        }
+
+        h1 {
+            font-size: 3em;
+            margin: 10px;
+        }
+
+        p {
+            margin: 10px;
+            opacity: 0.8; /* Slightly transparent */
+        }
+
+        /* Star background */
+        .star {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 0 20px white;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes moveStar {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(var(--x-direction), var(--y-direction)); }
+        }
+
+        button {
+            margin: 20px;
+            padding: 10px 20px;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s;
+            position: relative; /* Position for arrow pointing */
+        }
+
+        button:hover {
+            background-color: #ff1493;
+            transform: scale(1.05);
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 1.5em;
+            display: none;
+        }
+
+        /* Arrow pointing style */
+        .arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid #ff69b4;
+            display: none; /* Hidden by default */
+        }
+       .blow-message{
+        font-size: 40px;
+       }
+    </style>
+</head>
+<body>
+    <h1>Happy Birthday, yeAmenu Lej!</h1>
+    
+    <p  class="blow-message" id="blowMessage">Now Imagine if there is a Candle and Blow me, I mean Blow it!</p>
+
+    <div id="choices" style="display: none;">
+        <button id="doesntBlow" onclick="checkBlow('doesntBlow')">It doesn't blow</button>
+        <button id="blewIt" onclick="moveBlewIt()">I blew it</button>
+        <div class="arrow" id="arrow"></div> <!-- Arrow for pointing -->
+    </div>
+
+    <p id="message"></p> <!-- Message after each action -->
+
+    <!-- Button to play audio -->
+    <button id="playAudioButton" onclick="playAudio()">Play Music</button>
+
+    <audio id="backgroundMusic" loop>
+        <source src="237ce12a-0f90-422f-98b5-1e937312adec.mp3" type="audio/mp3">
+        Your browser does not support the audio tag.
+    </audio>
+
+    <script>
+        function startAnimation() {
+            document.getElementById("choices").style.display = "block";
+            createStars(100); // Create 100 stars
+
+            // Position the arrow initially
+            positionArrow();
+        }
+
+        function createStars(numStars) {
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement("div");
+                star.className = "star";
+                star.style.left = Math.random() * window.innerWidth + 'px'; // Use window width
+                star.style.top = Math.random() * window.innerHeight + 'px'; // Use window height
+
+                // Random directions for star movement
+                const xDirection = (Math.random() * 2 - 1) * 200; // Random x direction
+                const yDirection = (Math.random() * 2 - 1) * 200; // Random y direction
+
+                star.style.setProperty('--x-direction', `${xDirection}px`);
+                star.style.setProperty('--y-direction', `${yDirection}px`);
+
+                // Assign random animation duration
+                const duration = Math.random() * 5 + 3; // Duration between 3s and 8s
+                star.style.animation = `moveStar ${duration}s linear infinite alternate, twinkle 1.5s infinite alternate`;
+                
+                document.body.appendChild(star);
+            }
+        }
+
+        function checkBlow(action) {
+            const message = document.getElementById("message");
+            if (action === 'doesntBlow') {
+                const age = prompt("That's why the web doesn't know your age. Enter your age:");
+                message.innerText = `I ain't Believing  shit!!!
+                ♥♥♥♥♥♥ ANY WAYS HAPPY BIRTHDAY MAHI ♥♥♥♥♥♥`;
+            } else if (action === 'blewIt') {
+                message.innerText = "Happy Birthday! 🎉 Wishing you a fantastic year ahead!";
+            }
+            message.style.display = "block";
+        }
+
+        function moveBlewIt() {
+            const blewItButton = document.getElementById("blewIt");
+            const x = Math.random() * (window.innerWidth - 150); // Random x position
+            const y = Math.random() * (window.innerHeight - 50); // Random y position
+
+            blewItButton.style.left = x + 'px';
+            blewItButton.style.top = y + 'px';
+            blewItButton.style.position = 'absolute';
+
+            // Show arrow pointing to "It doesn't blow" button
+            positionArrow();
+        }
+
+        function positionArrow() {
+            const arrow = document.getElementById("arrow");
+            const doesntBlowButton = document.getElementById("doesntBlow");
+
+            // Calculate the position to place the arrow pointing towards the "It doesn't blow" button
+            const buttonRect = doesntBlowButton.getBoundingClientRect();
+            arrow.style.left = buttonRect.left + buttonRect.width / 2 - 10 + 'px'; // Centered above the button
+            arrow.style.top = buttonRect.top - 10 + 'px'; // Above the button
+            arrow.style.display = 'block'; // Show the arrow
+        }
+
+        function playAudio() {
+            const audio = document.getElementById("backgroundMusic");
+            audio.play().catch(error => console.log("Autoplay blocked:", error));
+        }
+
+        window.onload = startAnimation;
+    </script>
+</body>
+</html>
